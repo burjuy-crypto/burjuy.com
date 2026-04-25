@@ -1,0 +1,19 @@
+# Local working artefacts
+.work/
+*.psd
+*.bin
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*~
+
+# Netlify / Vercel local builds
+.netlify/
+.vercel/
+
+# Logs
+*.log

@@ -1,0 +1,8 @@
+# Force the production host once DNS for burjuy.com is live.
+# Netlify evaluates the request host against these patterns; the netlify.app
+# subdomain gets a permanent 301 to the apex.
+https://anton-burjuy.netlify.app/*  https://burjuy.com/:splat  301!
+http://anton-burjuy.netlify.app/*   https://burjuy.com/:splat  301!
+http://burjuy.com/*                 https://burjuy.com/:splat  301!
+http://www.burjuy.com/*             https://burjuy.com/:splat  301!
+https://www.burjuy.com/*            https://burjuy.com/:splat  301!
