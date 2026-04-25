@@ -282,22 +282,36 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 /* ---------- NOISE OVERLAY ---------- */
 .noise { display: none; }
 
-/* ---------- NAV ---------- */
+/* ---------- NAV ----------
+   Transparent over the dark hero (page top), white with backdrop blur once
+   scrolled past the hero. JS toggles `is-scrolled` at scrollY > 100.
+*/
 .nav {
   position: fixed; top: 0; left: 0; right: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: transparent;
   border-bottom: 1px solid transparent;
-  transition: border-bottom-color .35s var(--ease),
+  transition: background .35s var(--ease),
+              border-bottom-color .35s var(--ease),
               box-shadow .35s var(--ease);
 }
 .nav.is-scrolled {
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   border-bottom-color: var(--line);
   box-shadow: 0 1px 0 0 rgba(49, 49, 49, 0.02),
               0 4px 16px -8px rgba(49, 49, 49, 0.10);
 }
+/* Over the dark hero, copy and chrome go white. */
+.nav:not(.is-scrolled) .nav__logo,
+.nav:not(.is-scrolled) .nav__links a,
+.nav:not(.is-scrolled) .lang__btn.is-active { color: #FFFFFF; }
+.nav:not(.is-scrolled) .lang__btn { color: rgba(255,255,255,0.65); }
+.nav:not(.is-scrolled) .lang__sep { color: rgba(255,255,255,0.35); }
+.nav:not(.is-scrolled) .nav__burger span { background: #FFFFFF; }
+.nav:not(.is-scrolled) .lang__btn:hover,
+.nav:not(.is-scrolled) .nav__links a:hover { color: var(--orange-hover); }
 .nav__inner {
   display: grid;
   grid-template-columns: auto 1fr auto;
@@ -404,24 +418,26 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .drawer__links .btn { align-self: flex-start; margin-top: 10px; }
 
 /* ---------- HERO ----------
-   Brand-book hero archetype: dark/blue overlay on a real-estate photo
-   with white H1 and an orange primary CTA. We pair that with the portrait
-   on the right (light background card style on desktop).
+   Brand book hero archetype: dark gradient on the top zone (graphite scale
+   from the book), white H1, orange primary CTA. The stat strip below sits
+   as a white card breaking the gradient — institutional but functional.
 */
 .hero {
-  background: var(--bg-alt);
+  background: linear-gradient(135deg, #313131 0%, #414042 55%, #5A595B 100%);
   padding-top: 130px;
-  padding-bottom: 0;
+  padding-bottom: 56px;
   position: relative;
+  color: #FFFFFF;
 }
 .hero__grid {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
   gap: clamp(40px, 6vw, 80px);
   align-items: center;
-  padding-bottom: 80px;
+  padding-bottom: 64px;
 }
 .hero__copy { max-width: 60ch; }
+.hero .eyebrow { color: var(--orange-hover); }
 .hero__title {
   font-family: var(--sans);
   font-weight: 100;
@@ -429,24 +445,38 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   line-height: 1.08;
   letter-spacing: -0.012em;
   margin: 16px 0 28px;
-  color: var(--ink-100);
+  color: #FFFFFF;
   max-width: 22ch;
 }
 .hero__title strong {
   font-weight: 500;
-  color: var(--orange);
+  color: var(--orange-hover);
 }
 .hero__subtitle {
   font-family: var(--sans);
   font-weight: 400;
   font-size: 17px;
   line-height: 1.55;
-  color: var(--ink-70);
+  color: #D6D6D7;
   max-width: 58ch;
   margin: 0 0 36px;
 }
 .hero__cta {
   display: flex; gap: 16px; flex-wrap: wrap; align-items: center;
+}
+.hero__cta .btn--blue-outline {
+  /* On a dark hero, deep-blue outline disappears — surface the lighter blue. */
+  color: #FFFFFF;
+  border-color: #FFFFFF;
+}
+.hero__cta .btn--blue-outline:hover {
+  background: var(--blue-light);
+  color: #FFFFFF;
+  border-color: var(--blue-light);
+}
+.hero__cta .btn--blue-outline:active {
+  background: var(--blue-deep);
+  border-color: var(--blue-deep);
 }
 
 .hero__portrait {
@@ -456,9 +486,10 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   max-width: 440px;
   justify-self: end;
   width: 100%;
-  background: var(--ink-05);
+  background: rgba(255,255,255,0.04);
   border-radius: var(--radius-lg);
   overflow: hidden;
+  box-shadow: 0 24px 48px -16px rgba(0,0,0,0.40);
 }
 .hero__portrait img {
   width: 100%; height: 100%;
@@ -468,30 +499,34 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
 .hero__frame { display: none; }
 .hero__vignette { display: none; }
 
+/* Stat strip: white card floating inside the dark hero band. */
 .hero__stats {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   background: var(--bg);
-  border-top: 1px solid var(--line);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 16px 40px -16px rgba(0,0,0,0.35);
 }
 .stat {
-  padding: 28px 28px 28px;
+  padding: 26px 24px;
   border-right: 1px solid var(--line);
 }
 .stat:last-child { border-right: 0; }
 .stat__num {
   font-family: var(--sans);
   font-weight: 500;
-  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  font-size: clamp(1.3rem, 2.2vw, 1.8rem);
   color: var(--ink-100);
   line-height: 1;
   letter-spacing: -0.015em;
   font-variant-numeric: tabular-nums;
 }
+/* H6 spec: BOLD 700, ALL CAPS, letter-spacing. */
 .stat__label {
   margin-top: 12px;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--ink-70);
@@ -818,12 +853,13 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   padding: 28px;
 }
 .field { display: flex; flex-direction: column; gap: 8px; }
+/* H6 spec: BOLD 700, ALL CAPS, letter-spacing. */
 .field__label {
-  font-size: 12px;
-  letter-spacing: 0.06em;
+  font-size: 11px;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ink-70);
-  font-weight: 500;
+  font-weight: 700;
 }
 .field input,
 .field select,
@@ -873,16 +909,26 @@ ul, ol { margin: 0; padding: 0; list-style: none; }
   overflow: hidden;
 }
 .form__submit { align-self: flex-start; margin-top: 8px; }
+/* Success in the brand book "alert" style — filled bar, white text. */
 .form__success {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--success);
+  color: #FFFFFF;
+  margin: 16px 0 0;
+  padding: 14px 18px;
+  border-radius: var(--radius);
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.02em;
-  color: var(--success);
-  margin: 16px 0 0;
-  padding: 14px 16px;
-  background: rgba(124, 179, 66, 0.10);
-  border-radius: var(--radius);
-  border-left: 3px solid var(--success);
+}
+.form__success::before {
+  content: "✓";
+  font-weight: 700;
+  font-size: 16px;
+  line-height: 1;
+  flex: 0 0 auto;
 }
 
 /* ---------- FOOTER ---------- */
